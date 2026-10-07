@@ -1,5 +1,6 @@
 from flask import session, Flask, jsonify, request, Response, render_template, render_template_string, url_for
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import text
 import jwt
 from jwt.exceptions import DecodeError, MissingRequiredClaimError, InvalidKeyError
 import json
@@ -258,11 +259,11 @@ def search_customer():
                 try:
                     search_term = content['search']
                     print(search_term)
-                    str_query = "SELECT first_name, last_name, username FROM customer WHERE username = '%s';" % search_term
+                    str_query = "SELECT first_name, last_name, username FROM customer WHERE username = :username;"
                     # mycust = Customer.query.filter_by(username = search_term).first()
                     # return jsonify({'Customer': mycust.username, 'First Name': mycust.first_name}),200
 
-                    search_query = db.engine.execute(str_query)
+                    search_query = db.engine.execute(text(str_query), {'username': search_term})
                     for result in search_query:
                         results.append(list(result))
                     print(results)
@@ -326,7 +327,7 @@ def yaml_hammer():
         with open(file_path, 'r') as yfile:
             y = yfile.read()
 
-        ydata = yaml.load(y)
+        ydata = yaml.safe_load(y)
 
     return render_template('view.html', name = json.dumps(ydata))
 
