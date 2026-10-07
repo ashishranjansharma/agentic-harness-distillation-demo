@@ -1,5 +1,6 @@
 from flask import session, Flask, jsonify, request, Response, render_template, render_template_string, url_for
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import text
 import jwt
 from jwt.exceptions import DecodeError, MissingRequiredClaimError, InvalidKeyError
 import json
@@ -262,7 +263,7 @@ def search_customer():
                     # mycust = Customer.query.filter_by(username = search_term).first()
                     # return jsonify({'Customer': mycust.username, 'First Name': mycust.first_name}),200
 
-                    search_query = db.engine.execute(str_query, {'username': search_term})
+                    search_query = db.engine.execute(text(str_query), {'username': search_term})
                     for result in search_query:
                         results.append(list(result))
                     print(results)
@@ -311,6 +312,7 @@ def hello():
 def yaml_upload():
     return render_template(
         'yaml_test.html')
+
 @app.route("/yaml_hammer", methods = ['POST'])
 def yaml_hammer():
     if request.method == "POST":
