@@ -318,7 +318,8 @@ def yaml_upload():
 def yaml_hammer():
     if request.method == "POST":
         f = request.files['file']
-        rand = random.randint(1, 100)
+        import secrets
+rand = secrets.randbelow(100) + 1
         fname = secure_filename(f.filename)
         fname = str(rand) + fname  # change file name
         cwd = os.getcwd()
