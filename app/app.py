@@ -258,11 +258,11 @@ def search_customer():
                 try:
                     search_term = content['search']
                     print(search_term)
-                    str_query = "SELECT first_name, last_name, username FROM customer WHERE username = '%s';" % search_term
+                    str_query = "SELECT first_name, last_name, username FROM customer WHERE username = :username;"
                     # mycust = Customer.query.filter_by(username = search_term).first()
                     # return jsonify({'Customer': mycust.username, 'First Name': mycust.first_name}),200
 
-                    search_query = db.engine.execute(str_query)
+                    search_query = db.engine.execute(str_query, {'username': search_term})
                     for result in search_query:
                         results.append(list(result))
                     print(results)
@@ -311,7 +311,6 @@ def hello():
 def yaml_upload():
     return render_template(
         'yaml_test.html')
-
 @app.route("/yaml_hammer", methods = ['POST'])
 def yaml_hammer():
     if request.method == "POST":
@@ -326,7 +325,7 @@ def yaml_hammer():
         with open(file_path, 'r') as yfile:
             y = yfile.read()
 
-        ydata = yaml.load(y)
+        ydata = yaml.safe_load(y)
 
     return render_template('view.html', name = json.dumps(ydata))
 
