@@ -23,7 +23,7 @@ app_port = os.environ.get('APP_PORT', 5050)
 
 app = Flask(__name__, template_folder='templates')
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
-app.config['SECRET_KEY_HMAC'] = 'secret'
+app.config['SECRET_KEY_HMAC'] = os.environ.get('SECRET_KEY_HMAC', 'fallback-secret')
 app.config['SECRET_KEY_HMAC_2'] = 'am0r3C0mpl3xK3y'
 app.secret_key = 'F12Zr47j\3yX R~X@H!jmM]Lwf/,?KT'
 app.config['STATIC_FOLDER'] = None
